@@ -8,8 +8,8 @@ if sys_pf == 'darwin':
     import matplotlib.pyplot as plt
     matplotlib.use("TkAgg")
 
-base_dir = "./origin/"
-dst_dir = "./result/"
+base_dir = "./images/"
+dst_dir = "./tmp/"
 min_val = 10
 min_range = 30
 
