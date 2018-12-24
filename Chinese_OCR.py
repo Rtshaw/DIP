@@ -424,11 +424,12 @@ def main(_):
             logger.info('[the result info] image: {0} predict: {1} {2} {3}; predict index {4} predict_val {5}'.format(name_list[i], 
                 label_dict[int(candidate1)],label_dict[int(candidate2)],label_dict[int(candidate3)],final_predict_index[i],final_predict_val[i]))
         print ('=====================OCR RESULT=======================\n')
-        # 印出所有識別出來的結果（取top 1） 
-        
+        # 印出所有識別出來的結果（取top 1）
+        f = open('./result/outcome.txt', 'r+', encoding="utf-8-sig")
+        f.truncate()
         for i in range(len(final_reco_text)):
             print (final_reco_text[i], end=" ")
-            with open('./result/outcome.txt', 'a+') as f:
+            with open('./result/outcome.txt', 'a+', encoding="utf-8-sig") as f:
                 f.write("%s" %final_reco_text[i])
 
 if __name__ == "__main__":
