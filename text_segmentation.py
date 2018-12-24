@@ -56,14 +56,17 @@ def cutImage(img, peek_range):
             h = peek_range[1] - y
             pt1 = (x, y)
             pt2 = (x + w, y + h)
+                 
             count += 1
+            count = "%05d" %count
             
             img1 = img[y:peek_range[1], x:vertical_range[1]]
             new_shape = (64, 64)
             img1 = cv2.resize(img1, new_shape)  
             gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
             adaptive_threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-            cv2.imwrite(dst_dir + str(count) + ".png", adaptive_threshold)
+            cv2.imwrite(dst_dir + count + ".png", adaptive_threshold)
+            count = int(count)
 # cv2.rectangle(img, pt1, pt2, 0)
 # cv2.rectangle(line_seg_adaptive_threshold, pt1, pt2, 255)
 
