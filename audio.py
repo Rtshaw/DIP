@@ -27,7 +27,7 @@ def outcome(txtfile):
             #print(word)
             """
     else:
-        print("[INFO] 沒有可讀取檔案.")
+        print("\n[INFO] 沒有可讀取檔案.")
     
     with tempfile.NamedTemporaryFile(delete=True) as fp:
         tts = gTTS(text=word, lang='zh-TW')
@@ -38,7 +38,7 @@ def outcome(txtfile):
     
     mixer.init()
     mixer.music.load('./result/outcome.wav')
-    print("[INFO] 開始播放")
+    print("\n\n[INFO] 開始播放")
     screen=display.set_mode([200,50])
     mixer.music.play(0)
     clock= time.Clock()
@@ -48,4 +48,4 @@ def outcome(txtfile):
         clock.tick(10)
 
 
-outcome('./result/outcome.txt')
+#outcome('./result/outcome.txt')

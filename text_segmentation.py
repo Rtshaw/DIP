@@ -13,11 +13,7 @@ dst_dir = "./tmp/"
 min_val = 10
 min_range = 30
 
-img = cv2.imread("./images/1.png")
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-adaptive_threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
 
-horizontal_sum = np.sum(adaptive_threshold, axis=1)
 
 count = 0
 def extract_peek(array_vals, minimun_val, minimun_range):
@@ -42,12 +38,59 @@ def extract_peek(array_vals, minimun_val, minimun_range):
             raise ValueError("cannot parse this case...")
     return peek_ranges
 
-peek_range = extract_peek(horizontal_sum, min_val, min_range)
-line_seg_adaptive_threshold = np.copy(adaptive_threshold)
+#peek_range = extract_peek(horizontal_sum, min_val, min_range)
+#line_seg_adaptive_threshold = np.copy(adaptive_threshold)
 
 
-def cutImage(img, peek_range):
+
+# cv2.rectangle(img, pt1, pt2, 0)
+# cv2.rectangle(line_seg_adaptive_threshold, pt1, pt2, 255)
+
+
+
+def work():
+    img = cv2.imread("./images/1.png")
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    adaptive_threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+
+    horizontal_sum = np.sum(adaptive_threshold, axis=1)
+
+    peek_range = extract_peek(horizontal_sum, min_val, min_range)
+    line_seg_adaptive_threshold = np.copy(adaptive_threshold)
+    
+    for fileName in os.listdir(base_dir):
+        img = cv2.imread("./images/1.png")
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        adaptive_threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+        horizontal_sum = np.sum(adaptive_threshold, axis=1)
+        peek_ranges = extract_peek(horizontal_sum, min_val, min_range)
+        line_seg_adaptive_threshold = np.copy(adaptive_threshold)
+        
+    for i, peek_range in enumerate(peek_ranges):
+        x = 0
+        y = peek_range[0]
+        w = line_seg_adaptive_threshold.shape[1]
+        h = peek_range[1] - y
+        pt1 = (x, y)
+        pt2 = (x + w, y + h)
+        cv2.rectangle(line_seg_adaptive_threshold, pt1, pt2, 255)
+        
+    vertical_peek_ranges2d = []
+
+    for peek_range in peek_ranges:
+        start_y = peek_range[0]
+        end_y = peek_range[1]
+        line_img = adaptive_threshold[start_y:end_y, :]
+        vertical_sum = np.sum(line_img, axis=0)
+        vertical_peek_ranges = extract_peek(vertical_sum, min_val, min_range)
+        vertical_peek_ranges2d.append(vertical_peek_ranges)
+    
+    cutImage(img, peek_range, horizontal_sum, vertical_peek_ranges2d)
+    
+    
+def cutImage(img, peek_range, horizontal_sum, vertical_peek_ranges2d):
     global count
+    peek_ranges = extract_peek(horizontal_sum, min_val, min_range)
     for i, peek_range in enumerate(peek_ranges):
         for vertical_range in vertical_peek_ranges2d[i]:
             x = vertical_range[0]
@@ -67,36 +110,5 @@ def cutImage(img, peek_range):
             adaptive_threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
             cv2.imwrite(dst_dir + count + ".png", adaptive_threshold)
             count = int(count)
-# cv2.rectangle(img, pt1, pt2, 0)
-# cv2.rectangle(line_seg_adaptive_threshold, pt1, pt2, 255)
-
-for fileName in os.listdir(base_dir):
-    img = cv2.imread("./images/1.png")
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    adaptive_threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-    horizontal_sum = np.sum(adaptive_threshold, axis=1)
-    peek_ranges = extract_peek(horizontal_sum, min_val, min_range)
-    line_seg_adaptive_threshold = np.copy(adaptive_threshold)
-    
-for i, peek_range in enumerate(peek_ranges):
-    x = 0
-    y = peek_range[0]
-    w = line_seg_adaptive_threshold.shape[1]
-    h = peek_range[1] - y
-    pt1 = (x, y)
-    pt2 = (x + w, y + h)
-    cv2.rectangle(line_seg_adaptive_threshold, pt1, pt2, 255)
-    
-vertical_peek_ranges2d = []
-
-for peek_range in peek_ranges:
-    start_y = peek_range[0]
-    end_y = peek_range[1]
-    line_img = adaptive_threshold[start_y:end_y, :]
-    vertical_sum = np.sum(line_img, axis=0)
-    vertical_peek_ranges = extract_peek(vertical_sum, min_val, min_range)
-    vertical_peek_ranges2d.append(vertical_peek_ranges)
-    
-cutImage(img, peek_range)
 
 

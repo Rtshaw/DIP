@@ -20,6 +20,11 @@ import sys
 import importlib
 importlib.reload(sys)
 
+from pdftopng import pdf2png
+from audio import outcome
+from text_segmentation import work
+import shutil
+
 logger = logging.getLogger('Training a chinese write char recognition')
 logger.setLevel(logging.INFO)
 # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -47,7 +52,7 @@ tf.app.flags.DEFINE_string('log_dir', 'G:/Project/log', 'the logging dir')
 tf.app.flags.DEFINE_boolean('restore', False, 'whether to restore from checkpoint')
 tf.app.flags.DEFINE_boolean('epoch', 1, 'Number of epoches')
 tf.app.flags.DEFINE_integer('batch_size', 128, 'Validation batch size')
-tf.app.flags.DEFINE_string('mode', 'validation', 'Running mode. One of {"train", "valid", "test"}')
+tf.app.flags.DEFINE_string('mode', 'inference', 'Running mode. One of {"train", "valid", "test"}')
 
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.33)
 FLAGS = tf.app.flags.FLAGS
@@ -431,6 +436,17 @@ def main(_):
             print (final_reco_text[i], end=" ")
             with open('./result/outcome.txt', 'a+', encoding="utf-8-sig") as f:
                 f.write("%s" %final_reco_text[i])
+        time.sleep(1)
+        outcome('./result/outcome.txt')
+        #print("Hi")
 
 if __name__ == "__main__":
+    pdf2png(sys.argv[1])
+    shutil.rmtree('./tmp/')
+    os.mkdir('./tmp/')
+    work()  
     tf.app.run()
+    #print("Hi")
+    #outcome('./result/outcome.txt')
+    
+    
