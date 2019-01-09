@@ -45,8 +45,8 @@ tf.app.flags.DEFINE_integer('eval_steps', 100, "the step num to eval")
 tf.app.flags.DEFINE_integer('save_steps', 500, "the steps to save")
 
 tf.app.flags.DEFINE_string('checkpoint_dir', 'G:/Project/checkpoint/', 'the checkpoint dir')
-tf.app.flags.DEFINE_string('train_data_dir', 'G:/Project/dataset2/train/', 'the train dataset dir')
-tf.app.flags.DEFINE_string('test_data_dir', 'G:/Project/dataset2/test/', 'the test dataset dir')
+tf.app.flags.DEFINE_string('train_data_dir', 'G:/Project/dataset/train/', 'the train dataset dir')
+tf.app.flags.DEFINE_string('test_data_dir', 'G:/Project/dataset/test/', 'the test dataset dir')
 tf.app.flags.DEFINE_string('log_dir', 'G:/Project/log', 'the logging dir')
 
 tf.app.flags.DEFINE_boolean('restore', False, 'whether to restore from checkpoint')
@@ -205,8 +205,8 @@ def build_graph(top_k):
 def train():
     print('Begin training')
     # 填好數據讀取的路徑
-    train_feeder = DataIterator(data_dir='G:/Project/dataset2/train/')
-    test_feeder = DataIterator(data_dir='G:/Project/dataset2/test/')
+    train_feeder = DataIterator(data_dir='G:/Project/dataset/train/')
+    test_feeder = DataIterator(data_dir='G:/Project/dataset/test/')
     model_name = 'chinese-rec-model'
     with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True)) as sess:
         # batch data 獲取
@@ -278,7 +278,7 @@ def train():
 
 def validation():
     print('Begin validation')
-    test_feeder = DataIterator(data_dir='G:/Project/dataset2/test/')
+    test_feeder = DataIterator(data_dir='G:/Project/dataset/test/')
 
     final_predict_val = []
     final_predict_index = []
